@@ -618,7 +618,7 @@ class ProductDetailsScreen extends StatelessWidget {
               ),
             ),
           ).onTap(() {
-            Get.to(()=>const CartScreen());
+            Get.to(()=> CartScreen(buyerId: buyerId!,));
           }),
           Container(
             height: Adaptive.h(6),
