@@ -13,7 +13,8 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final String buyerId;
+  const HomeScreen({super.key, required this.buyerId});
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +144,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: GestureDetector(
                 onTap: () {
-                  Get.to(()=>const TopProductScreen());
+                  Get.to(()=> TopProductScreen(buyerId: buyerId,));
                 },
                 child: Image.asset('assets/images/homeban2.png')),
             ),

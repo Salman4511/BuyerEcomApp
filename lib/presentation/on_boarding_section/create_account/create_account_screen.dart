@@ -1,3 +1,4 @@
+import 'package:ecommerce_seller/infrastructure/services/auth_repo.dart';
 import 'package:ecommerce_seller/presentation/on_boarding_section/otp/otp_screen2.dart';
 import 'package:ecommerce_seller/presentation/widgets/button_widgets.dart';
 import 'package:ecommerce_seller/utilz/colors.dart';
@@ -12,6 +13,8 @@ class CreateAccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final repo = AuthRepo();
+    final mobileController = TextEditingController();
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -51,7 +54,7 @@ class CreateAccountScreen extends StatelessWidget {
               CreateAccountWidget(label: 'Name', hintText: 'Name'),
               sizedBoxHeight30,
               CreateAccountWidget(
-                  label: 'Mobile Number', hintText: 'Mobile Number *'),
+                  label: 'Mobile Number', hintText: 'Mobile Number *',controller: mobileController,),
               sizedBoxHeight30,
               CreateAccountWidget(label: 'Email', hintText: 'Email *'),
               sizedBoxHeight30,
@@ -64,9 +67,24 @@ class CreateAccountScreen extends StatelessWidget {
               ),
               sizedBoxHeight40,
               GestureDetector(
-                onTap: () {
-                  Get.to(()=>OtpScreen2());
-                  
+                onTap: () async {
+                  try {
+                    final response = await repo
+                        .buyerSignUp(int.tryParse(mobileController.text));
+                    if (response.data!.otp != null) {
+                      Get.to(() => OtpScreen2(otp: response.data!.otp.toString(), mobile: mobileController.text, buyerId:response.data?.sId??'',));
+                    }
+                  } catch (error) {
+                    Get.snackbar(
+                      'Error',
+                      'Enter Valid mobile',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                  }
+
+                  // Get.to(()=>OtpScreen2());
                 },
                 child: ButtonWidget(
                   backgroundColor: buttonColor,
@@ -119,13 +137,14 @@ class CreateAccountScreen extends StatelessWidget {
 
 class CreateAccountWidget extends StatelessWidget {
   const CreateAccountWidget(
-      {super.key, required this.label, required this.hintText});
+      {super.key, required this.label, required this.hintText, this.controller});
   final String label;
   final String hintText;
+  final TextEditingController? controller;
   @override
   Widget build(BuildContext context) {
     return TextField(
-    
+      controller: controller,
       decoration: InputDecoration(
           // label: Text('Mobile Number'),
           floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -146,7 +165,6 @@ class CreateAccountWidget extends StatelessWidget {
             color: grey.withOpacity(0.3),
           ),
           contentPadding: EdgeInsets.all(10)),
-
     );
   }
 }

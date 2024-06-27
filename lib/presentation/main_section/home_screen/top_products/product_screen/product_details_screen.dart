@@ -1,3 +1,4 @@
+import 'package:ecommerce_seller/infrastructure/services/wishlist_repo.dart';
 import 'package:ecommerce_seller/presentation/main_section/home_screen/cart/cart_screen.dart';
 import 'package:ecommerce_seller/presentation/main_section/home_screen/top_products/product_screen/widgets/productdetails_widget.dart';
 import 'package:ecommerce_seller/presentation/main_section/home_screen/top_products/rating_and_review_screen/rating_And_review_screen.dart';
@@ -12,10 +13,21 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
-  const ProductDetailsScreen({super.key});
+  final String? buyerId;
+  final String productId;
+  final String name;
+  final String maxPrice;
+  final String minPrice;
+  final String offer;
+  final String pairs;
+  final String color;
+  
+  const ProductDetailsScreen({super.key, required this.name, required this.maxPrice, required this.minPrice, required this.offer, required this.pairs, required this.color,  this.buyerId, required this.productId});
 
   @override
   Widget build(BuildContext context) {
+    final repo = WishlistRepo();
+    print('oooooo $buyerId');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: buttonColor,
@@ -100,7 +112,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Color:Grey',
+                          'Color:$color',
                           style: GoogleFonts.poppins(
                               fontSize: 15.px,
                               fontWeight: FontWeight.w400,
@@ -141,7 +153,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Men Printed Shirt ',
+                          name,
                           style: GoogleFonts.poppins(
                             fontSize: 15.px,
                             fontWeight: FontWeight.w500,
@@ -196,7 +208,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '₹ 3,699',
+                          maxPrice,
                           style: TextStyle(
                               decoration: TextDecoration.lineThrough,
                               color: Colors.black26,
@@ -205,7 +217,7 @@ class ProductDetailsScreen extends StatelessWidget {
                         ),
                         sizedBoxWidth10,
                         Text(
-                          '₹ 949',
+                        minPrice,
                           style: TextStyle(
                               color: black,
                               fontSize: 17.px,
@@ -213,7 +225,7 @@ class ProductDetailsScreen extends StatelessWidget {
                         ),
                         sizedBoxWidth10,
                         Text(
-                          '74% off',
+                          '$offer% off',
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w500,
                               fontSize: 16.px,
@@ -552,7 +564,33 @@ class ProductDetailsScreen extends StatelessWidget {
             Positioned(
               bottom: Adaptive.h(10),
               right: Adaptive.w(3),
-              child: Image.asset('assets/images/detailsstack.png'))
+              child: InkWell(
+                onTap: 
+                 () async {
+                  try {
+                    final response = await repo.addToWishlist(buyerId, productId);
+                    if (response.message == 'Product added to wishlist') {
+                      Get.snackbar(
+                      'Added',
+                      'Product added to wishlist',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                    }
+                  } catch (error) {
+                    Get.snackbar(
+                      'Error',
+                      'Product already in wishlist',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                  }
+                }, 
+                
+                child: Image.network(
+                  'https://cdn3.iconfinder.com/data/icons/complete-set-icons/512/favourite512x512.png',scale: 7,)))
           ],
         ),
       ),

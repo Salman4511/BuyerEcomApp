@@ -8,7 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ExtractedVerifiedScreen extends StatelessWidget {
-  const ExtractedVerifiedScreen({super.key});
+  final String buyerId;
+  const ExtractedVerifiedScreen({super.key, required this.buyerId});
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +147,7 @@ class ExtractedVerifiedScreen extends StatelessWidget {
               flex: 2,
               child: GestureDetector(
                 onTap: () {
-                   Get.to(()=>BottomNavigation());
+                   Get.to(()=>BottomNavigation(buyerId: buyerId,));
                 },
                 child: Container(
                   height: Adaptive.h(6),

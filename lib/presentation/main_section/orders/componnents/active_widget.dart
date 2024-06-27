@@ -49,7 +49,7 @@ class ActiveWidget extends StatelessWidget {
 //  controller.indexes.value=1;
 //  await Future.delayed(Duration(seconds: 1));
 //  log("is clicked ${controller.indexes}");
-Get.to(()=>CreateAccountScreen2(ishome: true,));
+Get.to(()=>CreateAccountScreen2(ishome: true, buyerId: '',));
              }),
           )
         ],

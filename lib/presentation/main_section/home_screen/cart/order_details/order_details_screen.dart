@@ -275,7 +275,7 @@ class OrderDetailsScreen extends StatelessWidget {
               
                   bottom.selectedIndex.value=0;
                         bottom.bottomNavigationIndexSelecting(0, 'home');
-               Get.to(BottomNavigation());
+               Get.to(BottomNavigation(buyerId: '',));
               })
               ),
             )

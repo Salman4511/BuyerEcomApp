@@ -1,3 +1,4 @@
+import 'package:ecommerce_seller/infrastructure/services/auth_repo.dart';
 import 'package:ecommerce_seller/presentation/main_section/bottom_navigation/bottom_navigation_screen.dart';
 import 'package:ecommerce_seller/presentation/on_boarding_section/reset_password/update_password_screen.dart';
 import 'package:ecommerce_seller/presentation/widgets/button_widgets.dart';
@@ -10,9 +11,16 @@ import 'package:pinput/pinput.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class OtpScreen extends StatelessWidget {
-  OtpScreen({super.key,this.isReset=false});
+  final String mobile;
+  final String otp;
+  final String buyerId;
+  OtpScreen(
+      {super.key,
+      this.isReset = false,
+      required this.mobile,
+      required this.otp, required this.buyerId});
 
-final bool isReset;
+  final bool isReset;
   final focusNode = FocusNode();
 
   final defaultPinTheme = PinTheme(
@@ -29,6 +37,7 @@ final bool isReset;
   );
   @override
   Widget build(BuildContext context) {
+    final repo = AuthRepo();
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -63,7 +72,7 @@ final bool isReset;
                 SizedBox(
                   height: 3.h,
                 ),
-          
+
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(
@@ -74,7 +83,7 @@ final bool isReset;
                         color: Colors.black),
                   ),
                   TextSpan(
-                    text: '+91 9999999999 \n',
+                    text: '+91 $mobile \n',
                     style: GoogleFonts.roboto(
                         fontSize: 14.px,
                         fontWeight: FontWeight.w400,
@@ -92,7 +101,7 @@ final bool isReset;
                 SizedBox(
                   height: Adaptive.h(5),
                 ),
-          
+
                 Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -105,7 +114,7 @@ final bool isReset;
                 SizedBox(
                   height: Adaptive.h(1),
                 ),
-          
+
                 Row(
                   children: [
                     Text(
@@ -116,15 +125,14 @@ final bool isReset;
                           color: const Color(0xff9E9E9E)),
                     ),
                     const Spacer(),
-                     Text(
+                    Text(
                       'Re-Send Code',
                       style: GoogleFonts.poppins(
                           fontSize: 14.px,
                           fontWeight: FontWeight.w400,
                           color: buttonColor,
                           decoration: TextDecoration.underline,
-                          decorationColor: buttonColor
-                          ),
+                          decorationColor: buttonColor),
                     ),
                   ],
                 ),
@@ -132,26 +140,40 @@ final bool isReset;
                   height: Adaptive.h(6),
                 ),
                 InkWell(
-                    onTap: () {
-                      //  Get.to(()=>BottomNavigation());
+                    onTap: () async {
                       if (isReset) {
-                        Get.to(()=>UpdatePassword());
-                      }else{
-                                                Get.to(()=>BottomNavigation());
+                        Get.to(() => const UpdatePassword());
+                      } else {
+                        try {
+                          final response = await repo.otpVerify(
+                              int.tryParse(
+                                mobile,
+                              ),
+                              otp);
+                          if (response.message == "OTP verified successfully") {
+                            Get.to(() =>  BottomNavigation(buyerId: buyerId,));
+                          }
+                        } catch (error) {
+                          Get.snackbar(
+                            'Error',
+                            'Invalid OTP',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white,
+                          );
+                        }
 
                       }
                     },
                     child: ButtonWidget(
-                        backgroundColor: buttonColor,
-                        title: 'Login',
-                        textColor: Colors.white,
-                        heights: Adaptive.h(6),
-                        )),
+                      backgroundColor: buttonColor,
+                      title: 'Login',
+                      textColor: Colors.white,
+                      heights: Adaptive.h(6),
+                    )),
                 SizedBox(
                   height: Adaptive.h(3),
                 ),
-          
-               
               ],
             ),
           ),

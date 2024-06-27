@@ -53,7 +53,10 @@ class AuthRepo {
       if (response.statusCode == 200) {
         print(response.data);
         return BuyerLoginModel.fromJson(response.data);
-      } else {
+      } else if (response.statusCode == 400) {
+        print(response.data);
+        return Future.error(response.data);  
+            } else {
         throw Exception("Error occured");
       }
     } catch (error) {

@@ -66,7 +66,7 @@ class ResetPassword extends StatelessWidget {
             sizedBoxHeight50,
             GestureDetector(
                onTap: () {
-                 Get.to(()=>OtpScreen(isReset: true,));
+                 Get.to(()=>OtpScreen(isReset: true, mobile: '', otp: '', buyerId: '',));
                },
               child: ButtonWidget(backgroundColor: buttonColor, title: 'SEND OTP', textColor: whiteColor,heights: Adaptive.h(6),size:19.px ,))
             ],

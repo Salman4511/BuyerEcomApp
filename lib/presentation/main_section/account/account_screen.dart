@@ -91,7 +91,7 @@ bottom.selectedIndex.value=2;
 
 print(bottom.selectedIndex);
                                 }else if(index==2){
-                                  Get.to(()=>const WishListScreen());
+                                  Get.to(()=>const WishListScreen(buyerId: '',));
                                   
                                  }else if(index==3){
                                         Get.to(()=>const NotificationScreen());

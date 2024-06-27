@@ -69,7 +69,7 @@ class CategoryScreen extends StatelessWidget {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        Get.to(()=>const TopProductScreen());
+                                        Get.to(()=>const TopProductScreen(buyerId:'',));
                                       },
                                       child: Container(
                                         height: Adaptive.h(13),
@@ -127,7 +127,7 @@ class CategoryScreen extends StatelessWidget {
                                     itemBuilder:(context, index) {
                                       return InkWell(
                                         onTap: () {
-                                          Get.to(()=> TopProductScreen());
+                                          Get.to(()=> const TopProductScreen(buyerId: '',));
                                         },
                                         child: Column(
                                           children: [

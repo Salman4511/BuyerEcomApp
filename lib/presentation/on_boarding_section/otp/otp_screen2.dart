@@ -1,3 +1,4 @@
+import 'package:ecommerce_seller/infrastructure/services/auth_repo.dart';
 import 'package:ecommerce_seller/presentation/on_boarding_section/create_account/create_account_screen2.dart';
 import 'package:ecommerce_seller/presentation/on_boarding_section/reset_password/update_password_screen.dart';
 import 'package:ecommerce_seller/presentation/widgets/button_widgets.dart';
@@ -10,7 +11,14 @@ import 'package:pinput/pinput.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class OtpScreen2 extends StatelessWidget {
-  OtpScreen2({super.key,});
+  final String buyerId;
+  final String mobile;
+  final String otp;
+  OtpScreen2({
+    super.key,
+    required this.otp,
+    required this.mobile, required this.buyerId,
+  });
 
 // final bool isReset;
   final focusNode = FocusNode();
@@ -29,6 +37,7 @@ class OtpScreen2 extends StatelessWidget {
   );
   @override
   Widget build(BuildContext context) {
+    final repo = AuthRepo();
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -63,7 +72,7 @@ class OtpScreen2 extends StatelessWidget {
                 SizedBox(
                   height: 3.h,
                 ),
-          
+
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(
@@ -74,7 +83,7 @@ class OtpScreen2 extends StatelessWidget {
                         color: Colors.black),
                   ),
                   TextSpan(
-                    text: '+91 9999999999 \n',
+                    text: '+91 $mobile \n',
                     style: GoogleFonts.roboto(
                         fontSize: 14.px,
                         fontWeight: FontWeight.w400,
@@ -92,7 +101,7 @@ class OtpScreen2 extends StatelessWidget {
                 SizedBox(
                   height: Adaptive.h(5),
                 ),
-          
+
                 Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -105,7 +114,7 @@ class OtpScreen2 extends StatelessWidget {
                 SizedBox(
                   height: Adaptive.h(1),
                 ),
-          
+
                 Row(
                   children: [
                     Text(
@@ -116,15 +125,14 @@ class OtpScreen2 extends StatelessWidget {
                           color: const Color(0xff9E9E9E)),
                     ),
                     const Spacer(),
-                     Text(
+                    Text(
                       'Re-Send Code',
                       style: GoogleFonts.poppins(
                           fontSize: 14.px,
                           fontWeight: FontWeight.w400,
                           color: buttonColor,
                           decoration: TextDecoration.underline,
-                          decorationColor: buttonColor
-                          ),
+                          decorationColor: buttonColor),
                     ),
                   ],
                 ),
@@ -132,23 +140,32 @@ class OtpScreen2 extends StatelessWidget {
                   height: Adaptive.h(6),
                 ),
                 InkWell(
-                    onTap: () {
-                      //  Get.to(()=>BottomNavigation());
-                     
-                        Get.to(()=>CreateAccountScreen2());
-                      
+                    onTap: () async {
+                      try {
+                        final response = await repo.otpVerify(
+                            int.tryParse(mobile), int.tryParse(otp));
+                        if (response.message == "OTP verified successfully") {
+                          Get.to(() => CreateAccountScreen2(buyerId: buyerId,));
+                        }
+                      } catch (error) {
+                        Get.snackbar(
+                          'Error',
+                          'Invalid Otp',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                      }
                     },
                     child: ButtonWidget(
-                        backgroundColor: buttonColor,
-                        title: 'Continue',
-                        textColor: Colors.white,
-                        heights: Adaptive.h(6),
-                        )),
+                      backgroundColor: buttonColor,
+                      title: 'Continue',
+                      textColor: Colors.white,
+                      heights: Adaptive.h(6),
+                    )),
                 SizedBox(
                   height: Adaptive.h(3),
                 ),
-          
-               
               ],
             ),
           ),

@@ -1,12 +1,10 @@
 import 'dart:developer';
 
-
 import 'package:ecommerce_seller/presentation/main_section/account/account_screen.dart';
 import 'package:ecommerce_seller/presentation/main_section/bottom_navigation/controller/bottom_navigation_controller.dart';
 import 'package:ecommerce_seller/presentation/main_section/home_screen/home_screen.dart';
 import 'package:ecommerce_seller/presentation/main_section/orders/orders_screen.dart';
 import 'package:ecommerce_seller/presentation/main_section/wish_list_screen/wish_list_screen.dart';
-import 'package:ecommerce_seller/presentation/on_boarding_section/otp/otp_screen2.dart';
 import 'package:ecommerce_seller/utilz/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +12,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class BottomNavigation extends StatefulWidget {
-  const BottomNavigation({super.key});
+  final String buyerId;
+  const BottomNavigation({super.key, required this.buyerId});
 
   @override
   State<BottomNavigation> createState() => _BottomNavigationState();
@@ -24,16 +23,26 @@ final bottom = Get.put(BottomNavigationController());
 
 class _BottomNavigationState extends State<BottomNavigation> {
   // int _selectedIndex = 0;
+  // static final List<Widget> _widgetOptions = <Widget>[
 
-  static final List<Widget> _widgetOptions = <Widget>[
-   
-    HomeScreen(),
-        WishListScreen(),
-            OrderScreen(), 
-               AccountScreen(),
-            
-            
-  ];
+  //     HomeScreen(buyerId:widget.buyerId,),
+  //       const WishListScreen(),
+  //           OrderScreen(),
+  //              const AccountScreen(),
+
+  // ];
+  late final List<Widget> _widgetOptions;
+
+  @override
+  void initState() {
+    super.initState();
+    _widgetOptions = <Widget>[
+      HomeScreen(buyerId: widget.buyerId),
+       WishListScreen(buyerId: widget.buyerId,),
+      OrderScreen(),
+      const AccountScreen(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,22 +52,22 @@ class _BottomNavigationState extends State<BottomNavigation> {
         return _widgetOptions.elementAt(bottom.selectedIndex.value);
       }),
       bottomNavigationBar: ClipRRect(
-         borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(0.sp),
-                topRight: Radius.circular(0.sp)),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(0.sp), topRight: Radius.circular(0.sp)),
         child: Container(
-            constraints: BoxConstraints(maxHeight: Adaptive.h(10), maxWidth: 98.w),
-            
+            constraints:
+                BoxConstraints(maxHeight: Adaptive.h(10), maxWidth: 98.w),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: const BoxDecoration(
               color: Colors.transparent,
-              border:Border(
-        top: BorderSide( // Specify the border for the top side
-          color: Colors.black12, // Choose the color of the border
-          width: 1.0, // Choose the width of the border
-        ),
-          ),
-             
+              border: Border(
+                top: BorderSide(
+                  // Specify the border for the top side
+                  color: Colors.black12, // Choose the color of the border
+                  width: 1.0, // Choose the width of the border
+                ),
+              ),
+
               // boxShadow: [
               //   BoxShadow(
               //     blurRadius: 20,
@@ -78,7 +87,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
                         ? Column(
                             children: [
                               Image.asset('assets/images/Home.png'),
-                               Text('Home',style: GoogleFonts.roboto(fontSize: 12.px,fontWeight: FontWeight.w500),),
+                              Text(
+                                'Home',
+                                style: GoogleFonts.roboto(
+                                    fontSize: 12.px,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ],
                           )
                         : Column(
@@ -86,11 +100,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
                               Image.asset(
                                 'assets/images/Home.png',
                                 color: chatColor,
-                                
                               ),
-                               Text(
+                              Text(
                                 'Home',
-                                style: GoogleFonts.roboto(color: chatColor,fontSize: 12.px,fontWeight: FontWeight.w500),
+                                style: GoogleFonts.roboto(
+                                    color: chatColor,
+                                    fontSize: 12.px,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
@@ -103,7 +119,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
                         ? Column(
                             children: [
                               Image.asset('assets/images/bottom2.png'),
-                               Text('WishList',style:GoogleFonts.roboto(fontSize: 12.px,fontWeight: FontWeight.w500),),
+                              Text(
+                                'WishList',
+                                style: GoogleFonts.roboto(
+                                    fontSize: 12.px,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ],
                           )
                         : Column(
@@ -114,7 +135,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
                               ),
                               Text(
                                 'WishList',
-                                style: GoogleFonts.roboto(color: chatColor,fontSize: 12.px,fontWeight: FontWeight.w500),
+                                style: GoogleFonts.roboto(
+                                    color: chatColor,
+                                    fontSize: 12.px,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
@@ -127,7 +151,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
                         ? Column(
                             children: [
                               Image.asset('assets/images/bottom3.png'),
-                               Text('Orders', style: GoogleFonts.roboto(fontSize: 12.px,fontWeight: FontWeight.w500)),
+                              Text('Orders',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 12.px,
+                                      fontWeight: FontWeight.w500)),
                             ],
                           )
                         : Column(
@@ -138,12 +165,15 @@ class _BottomNavigationState extends State<BottomNavigation> {
                               ),
                               Text(
                                 'Orders',
-                                style: GoogleFonts.roboto(color: chatColor,fontSize: 12.px,fontWeight: FontWeight.w500),
+                                style: GoogleFonts.roboto(
+                                    color: chatColor,
+                                    fontSize: 12.px,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
                   ),
-                   GestureDetector(
+                  GestureDetector(
                     onTap: () {
                       bottom.bottomNavigationIndexSelecting(3, 'account');
                     },
@@ -151,7 +181,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
                         ? Column(
                             children: [
                               Image.asset('assets/images/bottom4.png'),
-                               Text('Account', style: GoogleFonts.roboto(fontSize: 12.px,fontWeight: FontWeight.w500)),
+                              Text('Account',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 12.px,
+                                      fontWeight: FontWeight.w500)),
                             ],
                           )
                         : Column(
@@ -162,12 +195,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
                               ),
                               Text(
                                 'Account',
-                                style: GoogleFonts.roboto(color: chatColor,fontSize: 12.px,fontWeight: FontWeight.w500),
+                                style: GoogleFonts.roboto(
+                                    color: chatColor,
+                                    fontSize: 12.px,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
                   ),
-                  
                 ],
               );
             })
